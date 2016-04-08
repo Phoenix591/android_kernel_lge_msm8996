@@ -3844,6 +3844,8 @@ static int xhci_setup_device(struct usb_hcd *hcd, struct usb_device *udev,
 
 	if (xhci->xhc_state)	/* dying, removing or halted */
 		goto out;
+	if (xhci->xhc_state)	/* dying, removing or halted */
+		return -EINVAL; /* conflict: lineage had a goto out instead */
 
 	if (!udev->slot_id) {
 		xhci_dbg_trace(xhci, trace_xhci_dbg_address,
