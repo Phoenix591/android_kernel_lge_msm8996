@@ -41,6 +41,7 @@
 #include <linux/of_gpio.h>
 #include <linux/regulator/consumer.h>
 #include <linux/spi/spi.h>
+#include <linux/sched.h>
 #include <soc/qcom/scm.h>
 
 #include <linux/wakelock.h>
@@ -158,6 +159,20 @@ void fpc1020_input_destroy(struct fpc1020_data *fpc1020)
 
 	if (fpc1020->input_dev != NULL)
 		input_free_device(fpc1020->input_dev);
+}
+
+static void set_fingerprintd_nice(int nice)
+{
+	struct task_struct *p;
+
+	read_lock(&tasklist_lock);
+	for_each_process(p) {
+		if (!memcmp(p->comm, "fingerprintd", 13)) {
+			set_user_nice(p, nice);
+			break;
+		}
+	}
+	read_unlock(&tasklist_lock);
 }
 
 #if defined(CONFIG_FB)
@@ -979,6 +994,13 @@ static int fpc1020_resume(struct spi_device *spi)
 	}
 	sysfs_notify(&fpc1020->dev->kobj, NULL,
 				dev_attr_screen_state.attr.name);
+
+	/* Escalate fingerprintd priority when screen is off */
+	if (fpc1020->screen_state)
+		set_fingerprintd_nice(0);
+	else
+		set_fingerprintd_nice(MIN_NICE);
+
 //	if (fpc1020->clocks_suspended)
 //		set_clks(fpc1020, true);
 	return 0;
