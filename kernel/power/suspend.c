@@ -303,7 +303,6 @@ void __weak arch_suspend_enable_irqs(void)
  */
 static int suspend_enter(suspend_state_t state, bool *wakeup)
 {
-	char suspend_abort[MAX_SUSPEND_ABORT_LEN];
 	int error, last_dev;
 
 	error = platform_suspend_prepare(state);
@@ -372,9 +371,6 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
 				state, false);
 			events_check_enabled = false;
 		} else if (*wakeup) {
-			pm_get_active_wakeup_sources(suspend_abort,
-				MAX_SUSPEND_ABORT_LEN);
-			log_suspend_abort_reason(suspend_abort);
 			error = -EBUSY;
 		}
 
