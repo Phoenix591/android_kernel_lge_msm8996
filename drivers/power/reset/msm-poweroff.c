@@ -160,11 +160,6 @@ static void set_dload_mode(int on)
 }
 
 #ifndef CONFIG_LGE_HANDLE_PANIC
-static bool get_dload_mode(void)
-{
-	return dload_mode_enabled;
-}
-
 static void enable_emergency_dload_mode(void)
 {
 	int ret;
@@ -289,7 +284,6 @@ static void halt_spmi_pmic_arbiter(void)
 
 static void msm_restart_prepare(const char *cmd)
 {
-	bool need_warm_reset = false;
 
 #ifdef CONFIG_MSM_DLOAD_MODE
 
@@ -302,30 +296,10 @@ static void msm_restart_prepare(const char *cmd)
 			(in_panic || restart_mode == RESTART_DLOAD));
 #endif
 
-#ifdef CONFIG_LGE_HANDLE_PANIC
-	if (!hard_reset)
-		need_warm_reset = true;
-#else
-	if (qpnp_pon_check_hard_reset_stored()) {
-		/* Set warm reset as true when device is in dload mode */
-		if (get_dload_mode() ||
-			((cmd != NULL && cmd[0] != '\0') &&
-			!strcmp(cmd, "edl")))
-			need_warm_reset = true;
-	} else {
-		need_warm_reset = (get_dload_mode() ||
-				(cmd != NULL && cmd[0] != '\0'));
-	}
-#endif
+    /* Warm reset the PMIC to maintain memory contents. */
+    qpnp_pon_system_pwr_off(PON_POWER_OFF_WARM_RESET);
 
-	/* Hard reset the PMIC unless memory contents must be maintained. */
-	if (need_warm_reset) {
-		qpnp_pon_system_pwr_off(PON_POWER_OFF_WARM_RESET);
-	} else {
-		qpnp_pon_system_pwr_off(PON_POWER_OFF_HARD_RESET);
-	}
-
-	if (cmd != NULL) {
+	if (cmd != NULL || in_panic) {
 		if (!strncmp(cmd, "bootloader", 10)) {
 			qpnp_pon_set_restart_reason(
 				PON_RESTART_REASON_BOOTLOADER);
