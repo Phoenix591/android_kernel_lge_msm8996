@@ -2,7 +2,7 @@
 export kernel=Werewolf
 export outdir=/home/reddragon/Werewolf-Stock
 export makeopts="-j$(nproc)"
-export zImagePath="build/arch/arm64/boot/Image.gz-dtb"
+export zImagePath="build/arch/arm64/boot/Image.lz4-dtb"
 export KBUILD_BUILD_USER=USA-RedDragon
 export KBUILD_BUILD_HOST=EdgeOfCreation
 export CROSS_COMPILE="ccache /android-src/deso/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-gnu-6.x/bin/aarch64-linux-gnu-"
@@ -28,7 +28,7 @@ function build() {
     if [ -a ${zImagePath} ] ; then
         cp ${zImagePath} zip/zImage-dtb
         cd zip
-        zip -q -r ${kernel}-${device}-${version}.zip anykernel.sh  META-INF tools zImage-dtb
+        zip -q -r ${kernel}-${device}-${version}.zip anykernel.sh META-INF tools zImage-dtb
     else
         echo -e "\n\e[31m***** Build Failed *****\e[0m\n"
     fi
@@ -65,7 +65,7 @@ if [[ $devicetobuild =~ "all" ]] ; then
     build h910   # att
     build h918   # tmo
     build vs995  # vzw
-#    build us996  # usc
+    build us996  # usc
     build ls997  # spr
 else
     build $1
