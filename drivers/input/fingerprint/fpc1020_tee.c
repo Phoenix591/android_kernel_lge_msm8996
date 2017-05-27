@@ -729,14 +729,14 @@ static irqreturn_t fpc1020_irq_handler(int irq, void *handle)
 
 	sysfs_notify(&fpc1020->dev->kobj, NULL, dev_attr_irq.attr.name);
 
-	return IRQ_HANDLED;
-
 	if (!fpc1020->screen_state) {
 		input_report_key(fpc1020->input_dev, KEY_FINGERPRINT, 1);
 		input_sync(fpc1020->input_dev);
 		input_report_key(fpc1020->input_dev, KEY_FINGERPRINT, 0);
 		input_sync(fpc1020->input_dev);
 	}
+
+	return IRQ_HANDLED;
 }
 
 static int fpc1020_request_named_gpio(struct fpc1020_data *fpc1020,
