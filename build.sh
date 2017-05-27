@@ -9,6 +9,7 @@ export CROSS_COMPILE="ccache /android-src/deso/prebuilts/gcc/linux-x86/aarch64/a
 export ARCH=arm64
 export shouldclean="0"
 export shouldupload="0"
+export istest="0"
 
 export version=$(cat version)
 export RDIR=$(pwd)
@@ -46,7 +47,11 @@ function build() {
     rm -f zip/zImage-dtb
 
     if [[ $shouldupload =~ "1" ]] ; then
-        gdrive upload -p 0B9LNaOklMVBANU0zbDBKQlBEeTg /home/reddragon/Werewolf-Stock/${kernel}-${device}-${version}.zip
+        if [[ $istest =~ "1" ]] ; then
+            gdrive upload -p 0B9LNaOklMVBAVFFLcTVjc05PRzA /home/reddragon/Werewolf-Stock/${kernel}-${device}-${version}.zip
+        else
+            gdrive upload -p 0B9LNaOklMVBANU0zbDBKQlBEeTg /home/reddragon/Werewolf-Stock/${kernel}-${device}-${version}.zip
+        fi
     fi
 }
 
@@ -59,6 +64,12 @@ fi
 if [[ $3 =~ "upload" ]] ; then
     shouldclean="1"
     shouldupload="1"
+fi
+
+if [[ $3 =~ "uploadtest" ]] ; then
+    shouldclean="1"
+    shouldupload="1"
+    istest="1"
 fi
 
 if [[ $devicetobuild =~ "all" ]] ; then
