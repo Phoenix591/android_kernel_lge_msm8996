@@ -77,7 +77,7 @@ if [[ $devicetobuild =~ "all" ]] ; then
     build h910   # att
     build h918   # tmo
     build vs995  # vzw
-#    build us996  # usc
+    build us996  # usc
     build ls997  # spr
 else
     build $1
