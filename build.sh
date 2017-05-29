@@ -28,8 +28,9 @@ function build() {
 
     if [ -a ${zImagePath} ] ; then
         cp ${zImagePath} zip/zImage-dtb
+        find -name '*.ko' -exec cp -av {} zip//modules/ \;
         cd zip
-        zip -q -r ${kernel}-${device}-${version}.zip anykernel.sh META-INF tools zImage-dtb
+        zip -q -r ${kernel}-${device}-${version}.zip anykernel.sh META-INF tools modules zImage-dtb
     else
         echo -e "\n\e[31m***** Build Failed *****\e[0m\n"
     fi
@@ -45,6 +46,7 @@ function build() {
     cd ${RDIR}
 
     rm -f zip/zImage-dtb
+    rm -f zip/modules/*
 
     if [[ $shouldupload =~ "1" ]] ; then
         if [[ $istest =~ "1" ]] ; then
