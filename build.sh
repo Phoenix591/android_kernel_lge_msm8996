@@ -49,7 +49,7 @@ function build() {
 
     if [[ $shouldupload =~ "1" ]] ; then
         if [[ $istest =~ "1" ]] ; then
-            gdrive upload -p 0B9LNaOklMVBAVFFLcTVjc05PRzA /home/reddragon/Werewolf-Stock/${kernel}-${device}-${version}.zip
+            gdrive upload -p 0B9LNaOklMVBAVFFLcTVjc05PRzA /home/reddragon/Werewolf/${kernel}-${device}-${version}.zip
         else
             gdrive upload -p 0B9LNaOklMVBALWJmVTVTc21nM28 /home/reddragon/Werewolf/${kernel}-${device}-${version}.zip
         fi
