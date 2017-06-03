@@ -90,6 +90,9 @@ enum {
 
 };
 
+static int wl_divide = 4;
+module_param(wl_divide, int, 0644);
+
 static int debug_mask = DEBUG_USER_STATE;
 module_param_named(debug_mask, debug_mask, int, S_IRUGO | S_IWUSR | S_IWGRP);
 
@@ -249,7 +252,7 @@ static void bluesleep_sleep_work(struct work_struct *work)
 			/* UART clk is not turned off immediately. Release
 			 * wakelock after 500 ms.
 			 */
-			wake_lock_timeout(&bsi->wake_lock, HZ / 2);
+			wake_lock_timeout(&bsi->wake_lock, HZ / wl_divide);
 		} else {
 			pr_err("This should never happen.\n");
 			return;
@@ -488,7 +491,7 @@ void bluesleep_stop(void)
 	atomic_dec(&open_count);
 
 	enable_wakeup_irq(0);
-	wake_lock_timeout(&bsi->wake_lock, HZ / 2);
+	wake_lock_timeout(&bsi->wake_lock, HZ / wl_divide);
 }
 EXPORT_SYMBOL(bluesleep_stop);
 
