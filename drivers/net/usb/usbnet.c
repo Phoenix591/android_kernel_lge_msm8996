@@ -2280,8 +2280,8 @@ unbind:
 	if (info->unbind)
 		info->unbind (dev, udev);
 free_netdevice:
-	free_netdev(net);
-out1:
+//	free_netdev(net);
+//out1:
 	/* subdrivers must undo all they did in bind() if they
 	 * fail it, but we may fail later and a deferred kevent
 	 * may trigger an error resubmitting itself and, worse,
