@@ -8173,7 +8173,7 @@ static int smbchg_get_iusb(struct smbchg_chip *chip)
 static int smbchg_batt_id_checker(struct smbchg_chip *chip) {
 	union lge_power_propval lge_val = {0,};
 	int rc;
-	bool valid_id;
+	bool valid_id = false;
 
 	if (!chip->lge_batt_id_lpc)
 		chip->lge_batt_id_lpc = lge_power_get_by_name("lge_batt_id");
