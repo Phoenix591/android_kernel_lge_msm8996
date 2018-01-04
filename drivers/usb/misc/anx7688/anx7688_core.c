@@ -385,7 +385,7 @@ inline static void anx7688_dump_register(void)
 }
 
 #define PWR_DELAY    50
-#define BOOT_TIMEOUT (1000/PWR_DELAY)
+#define BOOT_TIMEOUT (3200/PWR_DELAY)
 void anx7688_pwr_on(struct anx7688_chip *chip)
 {
 	struct i2c_client *client = chip->client;
