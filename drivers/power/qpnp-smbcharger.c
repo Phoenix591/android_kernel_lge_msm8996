@@ -8125,17 +8125,13 @@ static void update_typec_otg_status(struct smbchg_chip *chip, int mode,
 
 	if (mode == POWER_SUPPLY_TYPE_DFP) {
 		chip->typec_dfp = true;
-#ifndef CONFIG_LGE_USB_TYPE_C
 		power_supply_set_usb_otg(chip->usb_psy, chip->typec_dfp);
-#endif
 		/* update FG */
 		set_property_on_fg(chip, POWER_SUPPLY_PROP_STATUS,
 				get_prop_batt_status(chip));
 	} else if (force || chip->typec_dfp) {
 		chip->typec_dfp = false;
-#ifndef CONFIG_LGE_USB_TYPE_C
 		power_supply_set_usb_otg(chip->usb_psy, chip->typec_dfp);
-#endif
 		/* update FG */
 		set_property_on_fg(chip, POWER_SUPPLY_PROP_STATUS,
 				get_prop_batt_status(chip));
