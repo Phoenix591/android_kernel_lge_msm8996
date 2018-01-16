@@ -784,6 +784,113 @@ include $(srctree)/scripts/Makefile.kasan
 include $(srctree)/scripts/Makefile.extrawarn
 include $(srctree)/scripts/Makefile.ubsan
 
+export QCOM_S820 := \
+        -march=armv8.1-a+crc+crypto \
+        -mtune=cortex-a57 \
+        --param l1-cache-line-size=64 \
+        --param l1-cache-size=32 \
+        --param l2-cache-size=512 \
+
+export GRAPHTIE_FLAGS := \
+        -fgraphite-identity \
+        -ftree-loop-linear \
+        -floop-interchange \
+        -floop-strip-mine \
+        -floop-block \
+
+export KCFLAGS := \
+        -pipe \
+        -O3 \
+        -flto \
+        -fomit-frame-pointer \
+        -ftree-vectorize \
+        -ftree-slp-vectorize \
+        -fvect-cost-model \
+        -ftree-partial-pre \
+        -fweb \
+        -fgcse \
+        -fgcse-sm \
+        -fgcse-las \
+        -fgcse-after-reload \
+        -fivopts \
+        -fsection-anchors \
+        -fsched-spec-load \
+        -ftree-loop-distribution \
+        -ftree-loop-distribute-patterns \
+        -ftree-loop-im \
+        -ftree-loop-if-convert \
+        -ftree-loop-if-convert-stores \
+        -fpredictive-commoning \
+        -foptimize-register-move \
+        -fipa-cp-clone \
+        -fipa-pta \
+        -fmodulo-sched \
+        -fmodulo-sched-allow-regmoves \
+        $(QCOM_S820) \
+        $(GRAPHITE_FLAGS) \
+
+export KCFLAGS += -Wno-maybe-uninitialized
+export LDFLAGS += -O3 --hash-style=gnu --as-needed -flto
+
+export KCFLAGS += -Wno-misleading-indentation
+export KCFLAGS += -Wno-tautological-compare
+export KCFLAGS += -Wno-array-bounds
+export KCFLAGS += -fno-use-linker-plugin
+export KCFLAGS += -Wno-unused-const-variable
+export QCOM_S820 := \
+        -march=armv8.1-a+crc+crypto \
+	-mtune=cortex-a57 \
+	--param l1-cache-line-size=64 \
+	--param l1-cache-size=32 \
+	--param l2-cache-size=512 \
+                                        
+export GRAPHTIE_FLAGS := \
+	-fgraphite-identity \
+	-ftree-loop-linear \
+                                                                -floop-interchange \
+                                                                        -floop-strip-mine \
+                                                                                -floop-block \
+                                                                                
+                                                                                export KCFLAGS := \
+                                                                                        -pipe \
+                                                                                                -O3 \
+                                                                                                        -flto \
+                                                                                                                -fomit-frame-pointer \
+                                                                                                                        -ftree-vectorize \
+                                                                                                                                -ftree-slp-vectorize \
+                                                                                                                                        -fvect-cost-model \
+                                                                                                                                                -ftree-partial-pre \
+                                                                                                                                                        -fweb \
+                                                                                                                                                                -fgcse \
+                                                                                                                                                                        -fgcse-sm \
+                                                                                                                                                                                -fgcse-las \
+                                                                                                                                                                                        -fgcse-after-reload \
+                                                                                                                                                                                                -fivopts \
+                                                                                                                                                                                                        -fsection-anchors \
+                                                                                                                                                                                                                -fsched-spec-load \
+                                                                                                                                                                                                                        -ftree-loop-distribution \
+                                                                                                                                                                                                                                -ftree-loop-distribute-patterns \
+                                                                                                                                                                                                                                        -ftree-loop-im \
+                                                                                                                                                                                                                                                -ftree-loop-if-convert \
+                                                                                                                                                                                                                                                        -ftree-loop-if-convert-stores \
+                                                                                                                                                                                                                                                                -fpredictive-commoning \
+                                                                                                                                                                                                                                                                        -foptimize-register-move \
+                                                                                                                                                                                                                                                                                -fipa-cp-clone \
+                                                                                                                                                                                                                                                                                        -fipa-pta \
+                                                                                                                                                                                                                                                                                                -fmodulo-sched \
+                                                                                                                                                                                                                                                                                                        -fmodulo-sched-allow-regmoves \
+                                                                                                                                                                                                                                                                                                                $(QCOM_S820) \
+                                                                                                                                                                                                                                                                                                                        $(GRAPHITE_FLAGS) \
+                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                        export KCFLAGS += -Wno-maybe-uninitialized
+                                                                                                                                                                                                                                                                                                                        export LDFLAGS += -O3 --hash-style=gnu --as-needed -flto
+                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                        export KCFLAGS += -Wno-misleading-indentation
+                                                                                                                                                                                                                                                                                                                        export KCFLAGS += -Wno-tautological-compare
+                                                                                                                                                                                                                                                                                                                        export KCFLAGS += -Wno-array-bounds
+                                                                                                                                                                                                                                                                                                                        export KCFLAGS += -fno-use-linker-plugin
+                                                                                                                                                                                                                                                                                                                        export KCFLAGS += -Wno-unused-const-variable
+
 # Add user supplied CPPFLAGS, AFLAGS and CFLAGS as the last assignments
 KBUILD_CPPFLAGS += $(KCPPFLAGS)
 KBUILD_AFLAGS += $(KAFLAGS)
