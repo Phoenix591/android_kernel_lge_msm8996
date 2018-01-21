@@ -156,8 +156,8 @@ struct n_hdlc {
 /*
  * HDLC buffer list manipulation functions
  */
-/* kconflict static void n_hdlc_buf_return(struct n_hdlc_buf_list *buf_list,
-						struct n_hdlc_buf *buf); */
+ static void n_hdlc_buf_return(struct n_hdlc_buf_list *buf_list,
+						struct n_hdlc_buf *buf); 
 static void n_hdlc_buf_put(struct n_hdlc_buf_list *list,
 			   struct n_hdlc_buf *buf);
 static struct n_hdlc_buf *n_hdlc_buf_get(struct n_hdlc_buf_list *list);
