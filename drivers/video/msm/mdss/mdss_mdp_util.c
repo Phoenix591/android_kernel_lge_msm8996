@@ -297,9 +297,9 @@ int mdss_rect_cmp(struct mdss_rect *rect1, struct mdss_rect *rect2)
 	/* Skip the vertical checking due to the 160px offset */
 	return rect1->x == rect2->x && rect1->w == rect2->w;
 #else
+
 	return rect1->x == rect2->x && rect1->y == rect2->y &&
 	       rect1->w == rect2->w && rect1->h == rect2->h;
-#endif
 }
 
 /*
