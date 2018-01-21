@@ -352,7 +352,7 @@ $(srctree)/scripts/Kbuild.include: ;
 include $(srctree)/scripts/Kbuild.include
 
 # Make variables (CC, etc...)
-AS		= $(CROSS_COMPILE)as
+iAS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld
 REAL_CC		= $(CROSS_COMPILE)gcc
 CPP		= $(CC) -E
@@ -628,7 +628,7 @@ ifdef CONFIG_READABLE_ASM
 # Disable optimizations that make assembler listings hard to read.
 # reorder blocks reorders the control in the function
 # ipa clone creates specialized cloned functions
-# partial inlining inlines only parts of functions
+w# partial inlining inlines only parts of functions
 KBUILD_CFLAGS += $(call cc-option,-fno-reorder-blocks,) \
                  $(call cc-option,-fno-ipa-cp-clone,) \
                  $(call cc-option,-fno-partial-inlining)
@@ -791,104 +791,61 @@ export QCOM_S820 := \
         --param l1-cache-size=32 \
         --param l2-cache-size=512 \
 
-export GRAPHTIE_FLAGS := \
-        -fgraphite-identity \
-        -ftree-loop-linear \
-        -floop-interchange \
-        -floop-strip-mine \
-        -floop-block \
+#export GRAPHTIE_FLAGS := \
+#        -fgraphite-identity \
+#        -ftree-loop-linear \
+#        -floop-interchange \
+#        -floop-strip-mine \
+#        -floop-block \
 
 export KCFLAGS := \
         -pipe \
         -O3 \
-        -flto \
-        -fomit-frame-pointer \
-        -ftree-vectorize \
-        -ftree-slp-vectorize \
-        -fvect-cost-model \
-        -ftree-partial-pre \
-        -fweb \
-        -fgcse \
-        -fgcse-sm \
-        -fgcse-las \
-        -fgcse-after-reload \
-        -fivopts \
-        -fsection-anchors \
-        -fsched-spec-load \
-        -ftree-loop-distribution \
-        -ftree-loop-distribute-patterns \
-        -ftree-loop-im \
-        -ftree-loop-if-convert \
-        -ftree-loop-if-convert-stores \
-        -fpredictive-commoning \
-        -foptimize-register-move \
-        -fipa-cp-clone \
-        -fipa-pta \
-        -fmodulo-sched \
-        -fmodulo-sched-allow-regmoves \
-        $(QCOM_S820) \
-        $(GRAPHITE_FLAGS) \
+#        -flto \
+#        -fomit-frame-pointer \
+#        -ftree-vectorize \
+#        -ftree-slp-vectorize \
+#        -fvect-cost-model \
+#        -ftree-partial-pre \
+#        -fweb \
+#        -fgcse \
+#        -fgcse-sm \
+#        -fgcse-las \
+#        -fgcse-after-reload \
+#        -fivopts \
+#        -fsection-anchors \
+#        -fsched-spec-load \
+#        -ftree-loop-distribution \
+#        -ftree-loop-distribute-patterns \
+#        -ftree-loop-im \
+#        -ftree-loop-if-convert \
+#        -ftree-loop-if-convert-stores \
+#        -fpredictive-commoning \
+#        -foptimize-register-move \
+#        -fipa-cp-clone \
+#        -fipa-pta \
+#        -fmodulo-sched \
+#        -fmodulo-sched-allow-regmoves \
+        $(QCOM_S820) 
+#        $(GRAPHITE_FLAGS) \
 
 export KCFLAGS += -Wno-maybe-uninitialized
-export LDFLAGS += -O3 --hash-style=gnu --as-needed -flto
+export LDFLAGS += -O3 --hash-style=gnu --as-needed 
+# -flto
 
 export KCFLAGS += -Wno-misleading-indentation
 export KCFLAGS += -Wno-tautological-compare
 export KCFLAGS += -Wno-array-bounds
 export KCFLAGS += -fno-use-linker-plugin
 export KCFLAGS += -Wno-unused-const-variable
-export QCOM_S820 := \
-        -march=armv8.1-a+crc+crypto \
-	-mtune=cortex-a57 \
-	--param l1-cache-line-size=64 \
-	--param l1-cache-size=32 \
-	--param l2-cache-size=512 \
-
-export GRAPHTIE_FLAGS := \
-	-fgraphite-identity \
-	-ftree-loop-linear \
-	-floop-interchange \
-	-floop-strip-mine \
-	-floop-block \
-
-export KCFLAGS := \
-	 -pipe \
-	-O2 \
-	-flto \
-	-fomit-frame-pointer \
-	-ftree-vectorize \
-	-ftree-slp-vectorize \
-	-fvect-cost-model \
-	-ftree-partial-pre \
-	-fweb \
-	-fgcse \
-	-fgcse-sm \
-	-fgcse-las \
-	-fgcse-after-reload \
-	-fivopts \
-	-fsection-anchors \
-	-fsched-spec-load \
-	-ftree-loop-distribution \
-	-ftree-loop-distribute-patterns \
-	-ftree-loop-im \
-	-ftree-loop-if-convert \
-	-ftree-loop-if-convert-stores \
-	-fpredictive-commoning \
-	-foptimize-register-move \
-	-fipa-cp-clone \
-	-fipa-pta \
-	-fmodulo-sched \
-	-fmodulo-sched-allow-regmoves \
-	$(QCOM_S820) \
-	$(GRAPHITE_FLAGS) \
-
-export KCFLAGS += -Wno-maybe-uninitialized
-export LDFLAGS += -O2 --hash-style=gnu --as-needed -flto
-export KCFLAGS += -Wno-misleading-indentation
-export KCFLAGS += -Wno-tautological-compare
-export KCFLAGS += -Wno-array-bounds
-export KCFLAGS += -fno-use-linker-plugin
-export KCFLAGS += -Wno-unused-const-variable
+export KCFLAGS += -Wno-format-truncation
+export KCFLAGS += -Wno-duplicate-decl-specifier
+export KCFLAGS += -Wno-memset-elt-size
+export KCFLAGS += -Wno-nonnull
+export KCFLAGS += -Wno-bool-operation
+export KCFLAGS += -Wno-parentheses
+export KCFLAGS += -Wno-switch-unreachable
+export KCFLAGS += -Wno-format-overflow
 
 # Add user supplied CPPFLAGS, AFLAGS and CFLAGS as the last assignments
 KBUILD_CPPFLAGS += $(KCPPFLAGS)
