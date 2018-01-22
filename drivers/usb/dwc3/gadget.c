@@ -2618,7 +2618,6 @@ static int dwc3_cleanup_done_reqs(struct dwc3 *dwc, struct dwc3_ep *dep,
 	struct dwc3_trb		*trb;
 	unsigned int		slot;
 	unsigned int		i;
-	unsigned int		trb_len;
 	int			count = 0;
 	int			ret;
 
