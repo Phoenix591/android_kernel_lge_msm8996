@@ -95,7 +95,7 @@ RDIR=$(pwd)
 VER=$(cat "$RDIR/VERSION")
 
 # directory containing cross-compile arm64 toolchain
-TOOLCHAIN=$HOME/build/toolchain/gcc-linaro-6.1.1-2016.08-x86_64_aarch64-linux-gnu
+TOOLCHAIN=$HOME/linaro-6.4/
 
 CPU_THREADS=$(grep -c "processor" /proc/cpuinfo)
 # amount of cpu threads to use in kernel make process
@@ -170,4 +170,5 @@ CLEAN_BUILD &&
 SETUP_BUILD &&
 BUILD_KERNEL &&
 INSTALL_MODULES &&
+cp build/arch/arm64/boot/Image.lz4-dtb $RDIR/Image-$1.lz4-dtb &&
 echo "Finished building $LOCALVERSION!"
