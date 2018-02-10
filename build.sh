@@ -129,7 +129,7 @@ ABORT "Device config $DEVICE_DEFCONFIG not found in $ARCH configs!"
 
 KDIR="$RDIR/build/arch/$ARCH/boot"
 export LOCALVERSION=$TARGET-$DEVICE-$VER
-
+export KCFLAGS='-march=armv8.1-a+crc+crypto -mtune=cortex-a57 --param l1-cache-line-size=64 --param l1-cache-size=32 --param l2-cache-size=512 -O2 -fno-use-linker-plugin'
 CLEAN_BUILD() {
 	echo "Cleaning build..."
 	rm -rf build
@@ -145,7 +145,7 @@ SETUP_BUILD() {
 
 BUILD_KERNEL() {
 	echo "Starting build for $LOCALVERSION..."
-	while ! make -C "$RDIR" O=build -j"$THREADS"; do
+	while ! make -C "$RDIR" O=build -j"$THREADS" KCFLAGS+="$KCFLAGS"; do
 		read -rp "Build failed. Retry? " do_retry
 		case $do_retry in
 			Y|y) continue ;;
