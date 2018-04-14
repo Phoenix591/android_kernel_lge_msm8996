@@ -63,7 +63,8 @@ RDIR=$(pwd)
 VER=$(cat "$RDIR/VERSION")
 
 # directory containing cross-compile arm64 toolchain
-TOOLCHAIN=$HOME/build/toolchain/bin/aarch64-linux-gnu-
+TOOLCHAIN=$HOME/linaro-7.2.1/bin/aarch64-linux-gnu-
+#build/toolchain/bin/aarch64-linux-gnu-
 
 CPU_THREADS=$(grep -c "processor" /proc/cpuinfo)
 # amount of cpu threads to use in kernel make process
@@ -78,7 +79,7 @@ ABORT() {
 	exit 1
 }
 
-export KBUILD_BUILD_USER=stendro
+export KBUILD_BUILD_USER=Phoenix591
 export KBUILD_BUILD_HOST=xda
 export ARCH=arm64
 export USE_CCACHE=1
@@ -147,3 +148,4 @@ SETUP_BUILD &&
 BUILD_KERNEL &&
 INSTALL_MODULES &&
 echo "Finished building $LOCALVERSION - Run ./copy_finished.sh"
+cp build/arch/arm64/boot/Image.lz4-dtb "$RDIR"/Image-$1.lz4-dtb
