@@ -5,7 +5,8 @@
 RDIR=$(pwd)
 
 # directory containing cross-compile arm64 toolchain
-TOOLCHAIN=$HOME/build/toolchain/gcc-linaro-6.1.1-2016.08-x86_64_aarch64-linux-gnu
+TOOLCHAIN=$HOME/linaro-7.2.1
+#/build/toolchain/gcc-linaro-6.1.1-2016.08-x86_64_aarch64-linux-gnu
 
 export ARCH=arm64
 export CROSS_COMPILE=$TOOLCHAIN/bin/aarch64-linux-gnu-

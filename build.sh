@@ -95,7 +95,8 @@ RDIR=$(pwd)
 VER=$(cat "$RDIR/VERSION")
 
 # directory containing cross-compile arm64 toolchain
-TOOLCHAIN=$HOME/linaro-6.4/
+TOOLCHAIN=$HOME/linaro-7.2.1
+#linaro-6.4/
 
 CPU_THREADS=$(grep -c "processor" /proc/cpuinfo)
 # amount of cpu threads to use in kernel make process
@@ -130,6 +131,7 @@ ABORT "Device config $DEVICE_DEFCONFIG not found in $ARCH configs!"
 KDIR="$RDIR/build/arch/$ARCH/boot"
 export LOCALVERSION=$TARGET-$DEVICE-$VER
 export KCFLAGS='-march=armv8.1-a+crc+crypto -mtune=cortex-a57 --param l1-cache-line-size=64 --param l1-cache-size=32 --param l2-cache-size=512 -O2 -fno-use-linker-plugin'
+export KCFLAGS=$KCFLAGS' -Wno-bool-operation -Wno-format-overflow -Wno-misleading-indentation -Wno-tautological-compare -Wno-array-bounds -Wno-format-truncation -Wno-duplicate-decl-specifier -Wno-memset-elt-size'
 CLEAN_BUILD() {
 	echo "Cleaning build..."
 	rm -rf build
