@@ -100,7 +100,8 @@ THREADS=$((CORES + 1))
 BDATE=$(LC_ALL='en_US.utf8' date '+%b %d %Y')
 
 # directory containing cross-compiler
-GCC_COMP=$HOME/build/toolchain/bin/aarch64-linux-gnu-
+GCC_COMP=$HOME/linaro-7.2.1/bin/aarch64-linux-gnu-
+
 
 # compiler version
 GCC_VER=$(${GCC_COMP}gcc --version | head -n 1 | cut -f1 -d')' | \
@@ -113,7 +114,11 @@ ABORT() {
 	exit 1
 }
 
+export KBUILD_BUILD_USER=phoenix591
+export KBUILD_BUILD_HOST=xda
 export ARCH=arm64
+export USE_CCACHE=1
+export CROSS_COMPILE=$GCC_COMP
 export KBUILD_COMPILER_STRING=$GCC_VER
 export KBUILD_BUILD_TIMESTAMP=$BDATE
 export KBUILD_BUILD_USER=stendro
@@ -251,3 +256,4 @@ INSTALL_MODULES &&
 PREPARE_NEXT &&
 echo -e $COLOR_G"Finished building ${DEVICE} ${VER} -- Kernel compilation took"$COLOR_R $BTIME
 echo -e $COLOR_P"Run ./copy_finished.sh to create AnyKernel zip."
+cp build/arm64/boot/Image.lz4-dtb ${RDIR}/Image-${1,,}.lz4-dtb
