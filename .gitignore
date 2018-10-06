@@ -13,6 +13,8 @@
 *.o
 *.o.*
 *.a
+*.gz-dtb
+*.lz4-dtb
 *.s
 *.ko
 *.so

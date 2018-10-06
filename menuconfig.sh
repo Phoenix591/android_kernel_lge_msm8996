@@ -8,7 +8,7 @@ OUTDIR=$(dirname "$RDIR")
 OUTFILE=defconfig_regen
 
 # directory containing cross-compiler
-TOOLCHAIN=$HOME/build/toolchain/bin/aarch64-linux-gnu-
+TOOLCHAIN=$HOME/linaro-7.2.1/bin/aarch64-linux-gnu-
 
 export ARCH=arm64
 export CROSS_COMPILE=$TOOLCHAIN

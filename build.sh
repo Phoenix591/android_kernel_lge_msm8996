@@ -82,7 +82,8 @@ CPU_THREADS=$(grep -c "processor" /proc/cpuinfo)
 THREADS=$((CPU_THREADS + 1))
 
 # directory containing cross-compiler
-GCC_COMP=$HOME/build/toolchain/bin/aarch64-linux-gnu-
+GCC_COMP=$HOME/linaro-7.2.1/bin/aarch64-linux-gnu-
+
 
 # compiler version
 GCC_VER=$(${GCC_COMP}gcc --version | head -n 1 | cut -f1 -d')' | \
@@ -95,10 +96,10 @@ ABORT() {
 	exit 1
 }
 
-export KBUILD_BUILD_USER=stendro
+export KBUILD_BUILD_USER=phoenix591
 export KBUILD_BUILD_HOST=xda
 export ARCH=arm64
-export USE_CCACHE=0
+export USE_CCACHE=1
 export CROSS_COMPILE=$GCC_COMP
 export KBUILD_COMPILER_STRING=$GCC_VER
 
@@ -215,3 +216,4 @@ BUILD_KERNEL &&
 INSTALL_MODULES &&
 PREPARE_NEXT &&
 echo "Finished building $LOCALVERSION -- Run ./copy_finished.sh"
+#cp build/arm64/boot/Image
