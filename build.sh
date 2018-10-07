@@ -76,17 +76,19 @@ VER=$(cat "$RDIR/VERSION")
 if [ "$IS_TWRP" = "twrp" ]; then
   echo "TWRP configuration selected"
 fi
+export CROSS_COMPILE=aarch64-linux-gnu-
 
 # select cpu threads
 CPU_THREADS=$(grep -c "processor" /proc/cpuinfo)
 THREADS=$((CPU_THREADS + 1))
 
 # directory containing cross-compiler
-GCC_COMP=$HOME/linaro-7.2.1/bin/aarch64-linux-gnu-
-
-
+GCC_COMP=$HOME/linaro-7.2.1
+#CCACHE symbolic link directory should contain links to the ccache executable named
+# ${CROSS_COMPILE}-gcc ie ln -s /usr/bin/ccacbe $CCACHEDIR/aarch64-linux-gnu-gxc
+CCACHEDIR=${HOME}/ccache
 # compiler version
-GCC_VER=$(${GCC_COMP}gcc --version | head -n 1 | cut -f1 -d')' | \
+GCC_VER=$(${GCC_COMP}/bin/${CROSS_COMPILE}gcc --version | head -n 1 | cut -f1 -d')' | \
 cut -f2 -d'(')
 
 ############## SCARY NO-TOUCHY STUFF ###############
@@ -95,14 +97,15 @@ ABORT() {
 	echo "Error: $*"
 	exit 1
 }
-
+export PATH=${GCC_COMP}/bin:${PATH}
 export KBUILD_BUILD_USER=phoenix591
 export KBUILD_BUILD_HOST=xda
 export ARCH=arm64
 export USE_CCACHE=1
-export CROSS_COMPILE=$GCC_COMP
 export KBUILD_COMPILER_STRING=$GCC_VER
-
+if [ "${USE_CCACHE}" -eq 1 ]; then
+	export PATH=${CCACHEDIR}:${PATH}
+fi
 # selected device
 [ "$1" ] && DEVICE=$1
 [ "$DEVICE" ] || ABORT "No device specified"
@@ -152,10 +155,18 @@ fi
 [ -f "$RDIR/arch/$ARCH/configs/${DEVICE_DEFCONFIG}" ] \
 	|| ABORT "$DEVICE_DEFCONFIG not found in $ARCH configs!"
 
-[ -x "${CROSS_COMPILE}gcc" ] \
-	|| ABORT "Cross-compiler not found at: ${CROSS_COMPILE}gcc"
+[ -x "${GCC_COMP}/bin/${CROSS_COMPILE}gcc" ] \
+	|| ABORT "Cross-compiler not found at: ${GCC_COMP}/bin/${CROSS_COMPILE}gcc"
 
 [ "$GCC_VER" ] || ABORT "Couldn't get GCC version"
+if [ "${USE_CCACHE}" -eq 1 ] && [ ! -L "${CCACHEDIR}/${CROSS_COMPILE}gcc" ]; then
+	echo "Ccache symlink not found at ${CCACHEDIR}/${CROSS_SCOMPILE}gcc"
+	read -rp  "Do you wish to continue without ccache? (y/n)" ccachefail
+	case ccachefail in
+		[yY] | [yY][Ee][Ss] ) continue ;;
+		*) exit 1 ;;
+	esac
+fi
 
 # build commands
 CLEAN_BUILD() {
@@ -216,4 +227,4 @@ BUILD_KERNEL &&
 INSTALL_MODULES &&
 PREPARE_NEXT &&
 echo "Finished building $LOCALVERSION -- Run ./copy_finished.sh"
-#cp build/arm64/boot/Image
+cp build/arch/arm64/boot/Image.lz4-dtb ./Image-${1,,}.lz4-dtb
