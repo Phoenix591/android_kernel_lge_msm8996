@@ -91,6 +91,7 @@ VER=$(cat "$RDIR/VERSION")
 if [ "$IS_TWRP" = "twrp" ]; then
   echo -e $COLOR_P"TWRP configuration selected."
 fi
+export CROSS_COMPILE=aarch64-linux-gnu-
 
 # select cpu threads
 CORES=$(grep -c "processor" /proc/cpuinfo)
@@ -100,11 +101,12 @@ THREADS=$((CORES + 1))
 BDATE=$(LC_ALL='en_US.utf8' date '+%b %d %Y')
 
 # directory containing cross-compiler
-GCC_COMP=$HOME/linaro-7.2.1/bin/aarch64-linux-gnu-
-
-
+GCC_COMP=$HOME/linaro-7.2.1
+#CCACHE symbolic link directory should contain links to the ccache executable named
+# ${CROSS_COMPILE}-gcc ie ln -s /usr/bin/ccacbe $CCACHEDIR/aarch64-linux-gnu-gxc
+CCACHEDIR=${HOME}/ccache
 # compiler version
-GCC_VER=$(${GCC_COMP}gcc --version | head -n 1 | cut -f1 -d')' | \
+GCC_VER=$(${GCC_COMP}/bin/${CROSS_COMPILE}gcc --version | head -n 1 | cut -f1 -d')' | \
 cut -f2 -d'(')
 
 ############## SCARY NO-TOUCHY STUFF ###############
@@ -113,23 +115,17 @@ ABORT() {
 	echo -e $COLOR_R"Error: $*"
 	exit 1
 }
-
+export PATH=${GCC_COMP}/bin:${PATH}
 export KBUILD_BUILD_USER=phoenix591
 export KBUILD_BUILD_HOST=xda
 export ARCH=arm64
 export USE_CCACHE=1
-export CROSS_COMPILE=$GCC_COMP
 export KBUILD_COMPILER_STRING=$GCC_VER
 export KBUILD_BUILD_TIMESTAMP=$BDATE
-export KBUILD_BUILD_USER=stendro
-export KBUILD_BUILD_HOST=github
 export MAKE_MK="MK2000 ${VER}"
-if [ "$USE_CCACHE" = "yes" ]; then
-  export CROSS_COMPILE="ccache $GCC_COMP"
-else
-  export CROSS_COMPILE=$GCC_COMP
+if [ "${USE_CCACHE}" -eq 1 ]; then
+	export PATH=${CCACHEDIR}:${PATH}
 fi
-
 # selected device
 [ "$1" ] && DEVICE=$1
 [ "$DEVICE" ] || ABORT "No device specified!"
@@ -179,15 +175,18 @@ fi
 [ -f "$RDIR/arch/$ARCH/configs/${DEVICE_DEFCONFIG}" ] \
 	|| ABORT "$DEVICE_DEFCONFIG not found in $ARCH configs!"
 
-[ -x "${GCC_COMP}gcc" ] \
-	|| ABORT "Cross-compiler not found at: ${GCC_COMP}gcc"
+[ -x "${GCC_COMP}/bin/${CROSS_COMPILE}gcc" ] \
+	|| ABORT "Cross-compiler not found at: ${GCC_COMP}/bin/${CROSS_COMPILE}gcc"
 
-if [ "$USE_CCACHE" = "yes" ]; then
-	command -v ccache >/dev/null 2>&1 \
-	|| ABORT "Do you have ccache installed?"
+[ "$GCC_VER" ] || ABORT "Couldn't get GCC version"
+if [ "${USE_CCACHE}" -eq 1 ] && [ ! -L "${CCACHEDIR}/${CROSS_COMPILE}gcc" ]; then
+	echo "Ccache symlink not found at ${CCACHEDIR}/${CROSS_SCOMPILE}gcc"
+	read -rp  "Do you wish to continue without ccache? (y/n)" ccachefail
+	case ccachefail in
+		[yY] | [yY][Ee][Ss] ) continue ;;
+		*) exit 1 ;;
+	esac
 fi
-
-[ "$GCC_VER" ] || ABORT "Couldn't get GCC version."
 
 # build commands
 CLEAN_BUILD() {
@@ -256,4 +255,4 @@ INSTALL_MODULES &&
 PREPARE_NEXT &&
 echo -e $COLOR_G"Finished building ${DEVICE} ${VER} -- Kernel compilation took"$COLOR_R $BTIME
 echo -e $COLOR_P"Run ./copy_finished.sh to create AnyKernel zip."
-cp build/arm64/boot/Image.lz4-dtb ${RDIR}/Image-${1,,}.lz4-dtb
+cp build/arch/arm64/boot/Image.lz4-dtb ${RDIR}/Image-${1,,}.lz4-dtb
